@@ -77,6 +77,6 @@ O site é publicado pelo GitHub Pages a partir da branch `main`. Toda alteraçã
 
 ```bash
 git add .
-git commit -m "Descrição da alteração"
+git commit -m "Descrição da alteração|feat|fix"
 git push
 ```
