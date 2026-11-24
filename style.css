@@ -321,6 +321,40 @@ button { font: inherit; cursor: pointer; }
 .catalogo__nota svg { color: var(--rosa); vertical-align: -2px; }
 .catalogo__nota a { font-weight: 800; }
 
+/* ---------- Sob encomenda ---------- */
+.encomenda {
+  background:
+    radial-gradient(circle at 8% 30%, rgba(255, 255, 255, .5) 0 90px, transparent 91px),
+    radial-gradient(circle at 95% 75%, rgba(255, 255, 255, .45) 0 130px, transparent 131px),
+    var(--pessego);
+}
+.encomenda .container { padding-top: 44px; padding-bottom: 64px; }
+.encomenda__passos {
+  list-style: none; padding: 0; margin: -6px 0 34px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 14px;
+}
+.encomenda__passos li {
+  display: inline-flex; align-items: center; gap: 8px; background: var(--papel); border-radius: 999px;
+  padding: 6px 16px 6px 6px; font-weight: 700; box-shadow: var(--sombra-leve);
+}
+.encomenda__passos span {
+  display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--verde-agua); color: #fff; font-family: var(--fonte-titulo);
+}
+.card__selo {
+  position: absolute; left: 18px; bottom: 18px; z-index: 1;
+  background: var(--verde-agua); color: #fff; font-weight: 800; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 999px; box-shadow: 0 4px 10px -4px rgba(0, 0, 0, .3);
+}
+.card--encomenda .card__foto { aspect-ratio: 4 / 3; }
+.card__preco--consulta { color: var(--verde-agua); }
+.encomenda .catalogo__nota { background: var(--papel); }
+.encomenda + .como .croche--topo { background-image: radial-gradient(circle at 14px 0, var(--pessego) 13px, transparent 14px); }
+.modal--encomenda .modal__galeria > img { aspect-ratio: 4 / 3; }
+.modal__selo {
+  align-self: flex-start; margin-top: 6px; background: var(--verde-agua); color: #fff; font-weight: 800; font-size: .75rem;
+  text-transform: uppercase; letter-spacing: .05em; padding: 3px 12px; border-radius: 999px;
+}
+
 /* ---------- Como pedir ---------- */
 .como {
   background:
@@ -563,6 +597,8 @@ button { font: inherit; cursor: pointer; }
   .card__acoes .btn { font-size: .85rem; padding: .65em .6em; }
   .card__add { width: 100%; flex-basis: auto; height: 38px; border-radius: 999px; }
   .card__zoom { display: none; }
+  .card--encomenda .card__foto { aspect-ratio: 1; }
+  .card__selo { left: 10px; bottom: 10px; font-size: .6rem; padding: 3px 8px; }
   .em-breve { grid-template-columns: 1fr; text-align: center; padding: 24px 18px; }
   .em-breve__selo { margin: 0 auto; width: 100px; height: 100px; font-size: 1.7rem; }
   .cuidados__grid { gap: 26px 12px; }

@@ -24,6 +24,10 @@ const CORES = {
   verde: "#2f7d4a",
   "verde-agua": "#2a9a8a",
   vinho: "#7a1f35",
+  pink: "#d6336c",
+  "azul-claro": "#7fb0dd",
+  marinho: "#1f2f5c",
+  branco: "#ffffff",
 };
 
 // Para adicionar um pano: coloque a foto em img/ e acrescente um item aqui.
@@ -65,6 +69,28 @@ const PRODUTOS = [
     desc: "Bule, pote e prato xadrez num cantinho de cozinha colonial, com barrado de crochê vinho." },
 ];
 
+// Panos com aplicação em crochê, feitos sob encomenda (sem preço fixo: valor e prazo pelo WhatsApp).
+const ENCOMENDAS = [
+  { cod: "E01", nome: "Cestinha Azul", croche: "Azul e branco", cor: ["azul", "branco"], fotos: ["croche-00.jpg", "croche-04.jpg"],
+    desc: "Cestinha de crochê azul com florzinhas brancas aplicadas no pano, e barrado de crochê azul." },
+  { cod: "E02", nome: "Cestinha com Borboleta", croche: "Vermelho e branco", cor: ["vermelho", "branco"], fotos: ["croche-06.jpg", "croche-04.jpg"],
+    desc: "Cestinha vermelha com flor branca e uma borboletinha de crochê, com barrado vermelho." },
+  { cod: "E03", nome: "Cesta Verde Rendada", croche: "Verde e branco", cor: ["verde", "branco"], fotos: ["croche-03.jpg"], pos: "50% 75%",
+    desc: "Cesta de crochê verde e branca que forma o próprio barrado do pano — um charme rendado." },
+  { cod: "E04", nome: "Rosas Pink", croche: "Pink e verde", cor: ["pink", "verde"], fotos: ["croche-01.jpg"],
+    desc: "Três rosas pink de crochê com botões e cabinhos, barrado pink com acabamento verde." },
+  { cod: "E05", nome: "Jardim Azul", croche: "Azul claro", cor: ["azul-claro", "azul", "branco"], fotos: ["croche-02.jpg"],
+    desc: "Flores de crochê em tons de azul e branco com folhagens verdes, e barrado azul clarinho." },
+  { cod: "E06", nome: "Buquê Azul e Branco", croche: "Azul claro", cor: ["azul-claro", "azul"], fotos: ["croche-07.jpg"],
+    desc: "Buquê de flores azuis e branca de crochê, com barrado azul claro em leques." },
+  { cod: "E07", nome: "Flores Marinho", croche: "Marinho e branco", cor: ["marinho", "branco"], fotos: ["croche-05.jpg"],
+    desc: "Florzinhas azul-marinho e brancas com miolo de pérola, e barrado de crochê marinho e branco." },
+  { cod: "E08", nome: "Rosas Vinho", croche: "Vinho", cor: ["vinho", "vermelho", "pink"], fotos: ["croche-08.jpg", "croche-10.jpg"],
+    desc: "Rosa vermelha no centro, com flores vinho e pink de crochê e um barrado vinho bem trabalhado." },
+  { cod: "E09", nome: "Galinha d'Angola", croche: "Vermelho", cor: ["vermelho"], fotos: ["croche-09.jpg"],
+    desc: "Galinha d'angola de bolinhas no ninho, com florzinhas e barrado de crochê vermelho em relevo." },
+].map((p) => ({ ...p, encomenda: true }));
+
 // ---- Utilidades ----
 const $ = (s, el = document) => el.querySelector(s);
 const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -72,8 +98,9 @@ const precoDe = (p) => p.preco ?? PRECO_BASE;
 const linkWhats = (msg) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
 const bolinhas = (p) => p.cor.map((c) => `<span class="bolinha" style="background:${CORES[c]}"></span>`).join("");
 
-const msgProduto = (p) =>
-  `Olá, Lu! 💕 Vi no site e me apaixonei pelo pano de prato *${p.nome}* (código ${p.cod}). Ainda está disponível?`;
+const msgProduto = (p) => p.encomenda
+  ? `Olá, Lu! 💕 Vi no site o modelo *${p.nome}* (código ${p.cod}), com aplicação em crochê, e gostaria de encomendar. Pode me passar o valor e o prazo?`
+  : `Olá, Lu! 💕 Vi no site e me apaixonei pelo pano de prato *${p.nome}* (código ${p.cod}). Ainda está disponível?`;
 
 // ---- Links gerais de WhatsApp ----
 document.querySelectorAll(".js-whats-geral").forEach((a) => {
@@ -106,7 +133,7 @@ menu.addEventListener("click", (e) => {
 let sacola = {};
 try { sacola = JSON.parse(localStorage.getItem("lu-sacola")) || {}; } catch { sacola = {}; }
 const salvarSacola = () => { try { localStorage.setItem("lu-sacola", JSON.stringify(sacola)); } catch {} };
-const porCodigo = (cod) => PRODUTOS.find((p) => p.cod === cod);
+const porCodigo = (cod) => PRODUTOS.find((p) => p.cod === cod) || ENCOMENDAS.find((p) => p.cod === cod);
 
 function adicionar(cod) {
   sacola[cod] = (sacola[cod] || 0) + 1;
@@ -153,7 +180,7 @@ function atualizarSacola() {
       <img src="img/${p.fotos[0]}" alt="">
       <div>
         <b>${p.nome}</b>
-        <small>${p.cod} · ${brl(precoDe(p))}</small>
+        <small>${p.cod} · ${p.encomenda ? "sob encomenda" : brl(precoDe(p))}</small>
         <div class="item-sacola__qtd">
           <button data-menos="${cod}" aria-label="Diminuir">−</button>
           <span>${q}</span>
@@ -164,13 +191,19 @@ function atualizarSacola() {
     </div>`;
   }).join("");
 
-  const total = itens.reduce((s, [cod, q]) => s + precoDe(porCodigo(cod)) * q, 0);
-  $("#sacolaTotal").textContent = `a partir de ${brl(total)}`;
+  const prontos = itens.filter(([cod]) => !porCodigo(cod).encomenda);
+  const sobEncomenda = itens.filter(([cod]) => porCodigo(cod).encomenda);
+  const total = prontos.reduce((s, [cod, q]) => s + precoDe(porCodigo(cod)) * q, 0);
+  $("#sacolaTotal").textContent = !prontos.length
+    ? "a combinar"
+    : `a partir de ${brl(total)}${sobEncomenda.length ? " + encomendas" : ""}`;
 
-  const linhas = itens.map(([cod, q]) => `• ${q}x *${porCodigo(cod).nome}* (${cod})`).join("\n");
-  $("#sacolaEnviar").href = linkWhats(
-    `Olá, Lu! 💕 Vi no site e gostaria de pedir estes panos de prato:\n\n${linhas}\n\nAinda estão disponíveis?`
-  );
+  const linhas = (lista) => lista.map(([cod, q]) => `• ${q}x *${porCodigo(cod).nome}* (${cod})`).join("\n");
+  let msg = "Olá, Lu! 💕 Vi no site e gostaria de pedir:\n";
+  if (prontos.length) msg += `\n*Panos de prato bordados:*\n${linhas(prontos)}\n`;
+  if (sobEncomenda.length) msg += `\n*Sob encomenda (aplicação em crochê):*\n${linhas(sobEncomenda)}\n`;
+  msg += sobEncomenda.length ? "\nPode me confirmar disponibilidade, valores e prazo?" : "\nAinda estão disponíveis?";
+  $("#sacolaEnviar").href = linkWhats(msg);
 }
 
 $("#sacolaLista").addEventListener("click", (e) => {
@@ -222,34 +255,43 @@ $("#filtros").addEventListener("click", (e) => {
 });
 
 // ---- Grade de produtos ----
-function renderGrade() {
-  const lista = filtroAtual === "todos" ? PRODUTOS : PRODUTOS.filter((p) => p.cat === filtroAtual);
-  $("#grade").innerHTML = lista.map((p, i) => `
-    <article class="card" style="animation-delay:${i * 40}ms">
+const cardHTML = (p, i) => `
+    <article class="card${p.encomenda ? " card--encomenda" : ""}" style="animation-delay:${i * 40}ms">
       <button class="card__foto" data-abrir="${p.cod}" aria-label="Ver detalhes de ${p.nome}">
         <span class="card__cod">${p.cod}</span>
         ${p.fotos.length > 1 ? `<span class="card__fotos-qtd">${p.fotos.length} fotos</span>` : ""}
         <img src="img/${p.fotos[0]}" alt="Pano de prato ${p.nome}" loading="lazy"${p.pos ? ` style="object-position:${p.pos}"` : ""}>
+        ${p.encomenda ? `<span class="card__selo">Sob encomenda</span>` : ""}
         <span class="card__zoom">Ver de pertinho</span>
       </button>
       <div class="card__corpo">
         <h3 class="card__nome">${p.nome}</h3>
         <span class="card__croche">${bolinhas(p)} Crochê ${p.croche.toLowerCase()}</span>
-        <p class="card__preco"><small>a partir de</small>${brl(precoDe(p))}</p>
+        ${p.encomenda
+          ? `<p class="card__preco card__preco--consulta"><small>valor</small>sob consulta</p>`
+          : `<p class="card__preco"><small>a partir de</small>${brl(precoDe(p))}</p>`}
         <div class="card__acoes">
-          <a class="btn btn--whats" href="${linkWhats(msgProduto(p))}" target="_blank" rel="noopener"><svg><use href="#i-whats"/></svg> Quero este</a>
+          <a class="btn btn--whats" href="${linkWhats(msgProduto(p))}" target="_blank" rel="noopener"><svg><use href="#i-whats"/></svg> ${p.encomenda ? "Encomendar" : "Quero este"}</a>
           <button class="card__add" data-cod="${p.cod}" aria-label="Adicionar ${p.nome} à sacola"><svg><use href="#i-plus"/></svg></button>
         </div>
       </div>
-    </article>`).join("");
+    </article>`;
+
+function renderGrade() {
+  const lista = filtroAtual === "todos" ? PRODUTOS : PRODUTOS.filter((p) => p.cat === filtroAtual);
+  $("#grade").innerHTML = lista.map(cardHTML).join("");
   atualizarSacola();
 }
-$("#grade").addEventListener("click", (e) => {
+function renderEncomendas() {
+  $("#gradeEncomenda").innerHTML = ENCOMENDAS.map(cardHTML).join("");
+  atualizarSacola();
+}
+[$("#grade"), $("#gradeEncomenda")].forEach((g) => g.addEventListener("click", (e) => {
   const abrir = e.target.closest("[data-abrir]");
   if (abrir) return abrirModal(abrir.dataset.abrir);
   const add = e.target.closest(".card__add");
   if (add) adicionar(add.dataset.cod);
-});
+}));
 
 // ---- Modal do produto ----
 const modal = $("#modal");
@@ -266,10 +308,17 @@ function abrirModal(cod) {
   $("#modalCod").textContent = `CÓDIGO ${p.cod}`;
   $("#modalTitulo").textContent = p.nome;
   $("#modalDesc").textContent = p.desc;
-  $("#modalCat").textContent = CATEGORIAS[p.cat];
+  $("#modalCat").textContent = p.encomenda ? "Aplicação em crochê" : CATEGORIAS[p.cat];
   $("#modalCroche").innerHTML = `${bolinhas(p)} ${p.croche}`;
-  $("#modalPreco").textContent = brl(precoDe(p));
+  $("#modalPrecoRotulo").textContent = p.encomenda ? "valor" : "a partir de";
+  $("#modalPreco").textContent = p.encomenda ? "Sob consulta" : brl(precoDe(p));
   $("#modalWhats").href = linkWhats(msgProduto(p));
+  $("#modalWhatsTxt").textContent = p.encomenda ? "Encomendar este" : "Quero este";
+  $("#modalSelo").hidden = !p.encomenda;
+  modal.classList.toggle("modal--encomenda", !!p.encomenda);
+  $("#modalObs").innerHTML = p.encomenda
+    ? "Feito <b>sob encomenda</b>, especialmente para você. Valor e prazo são combinados pelo WhatsApp."
+    : "Pagamento pelo site <b>em breve</b>. Por enquanto, tudo é combinado pelo WhatsApp.";
   $("#modalMinis").innerHTML = p.fotos.length > 1
     ? p.fotos.map((f, i) => `<button data-foto="${i}" aria-label="Foto ${i + 1}"><img src="img/${f}" alt=""></button>`).join("")
     : "";
@@ -298,3 +347,4 @@ function toast(msg) {
 // ---- Início ----
 renderFiltros();
 renderGrade();
+renderEncomendas();

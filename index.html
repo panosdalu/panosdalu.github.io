@@ -46,6 +46,7 @@
       </a>
       <nav class="menu" id="menu" aria-label="Principal">
         <a href="#catalogo">Catálogo</a>
+        <a href="#encomenda">Sob encomenda</a>
         <a href="#como-pedir">Como pedir</a>
         <a href="#cuidados">Cuidados</a>
         <a href="#duvidas">Dúvidas</a>
@@ -143,7 +144,32 @@
 
         <p class="catalogo__nota">
           <svg><use href="#i-heart"/></svg>
-          Como são peças artesanais e únicas, a disponibilidade pode mudar. Quer outra estampa ou cor de crochê? <a href="#" class="js-whats-encomenda">Peça sob encomenda!</a>
+          Como são peças artesanais e únicas, a disponibilidade pode mudar. Procurando algo especial? <a href="#encomenda">Veja os modelos sob encomenda!</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Sob encomenda -->
+    <section class="encomenda" id="encomenda">
+      <div class="croche croche--topo"></div>
+      <div class="container">
+        <header class="secao-titulo">
+          <span class="secao-titulo__script">feitos para você</span>
+          <h2>Sob encomenda</h2>
+          <p>Panos com <b>aplicações em crochê</b>: cestinhas, flores e bichinhos feitos ponto a ponto. Escolha o modelo e a Lu faz especialmente para você.</p>
+        </header>
+
+        <ul class="encomenda__passos">
+          <li><span>1</span> Escolha o modelo</li>
+          <li><span>2</span> Combine cores e detalhes</li>
+          <li><span>3</span> A Lu faz o seu com carinho</li>
+        </ul>
+
+        <div class="grade" id="gradeEncomenda" aria-live="polite"></div>
+
+        <p class="catalogo__nota">
+          <svg><use href="#i-heart"/></svg>
+          Valor e prazo de cada encomenda são combinados pelo WhatsApp. Imaginou outro modelo? <a href="#" class="js-whats-encomenda">Conte pra Lu!</a>
         </p>
       </div>
     </section>
@@ -246,6 +272,10 @@
             <p>Pode sim! Chame a Lu no WhatsApp contando o que você imaginou que ela te diz o que dá para fazer.</p>
           </details>
           <details>
+            <summary>Como funcionam as encomendas?</summary>
+            <p>Os panos com aplicação em crochê são feitos sob encomenda: você escolhe o modelo no site, combina as cores e os detalhes com a Lu pelo WhatsApp e ela faz o seu especialmente para você. O valor e o prazo são informados na conversa.</p>
+          </details>
+          <details>
             <summary>Os panos são todos iguais às fotos?</summary>
             <p>As fotos são das próprias peças. Como tudo é feito à mão, cada pano é único e pode ter pequenas diferenças de uma peça para outra.</p>
           </details>
@@ -299,6 +329,7 @@
       </div>
       <div class="modal__info">
         <span class="modal__cod" id="modalCod"></span>
+        <span class="modal__selo" id="modalSelo" hidden>Sob encomenda</span>
         <h3 id="modalTitulo"></h3>
         <p class="modal__desc" id="modalDesc"></p>
         <dl class="modal__ficha">
@@ -306,12 +337,12 @@
           <div><dt>Crochê</dt><dd id="modalCroche"></dd></div>
           <div><dt>Acabamento</dt><dd>Feito à mão</dd></div>
         </dl>
-        <p class="modal__preco"><small>a partir de</small> <span id="modalPreco"></span></p>
+        <p class="modal__preco"><small id="modalPrecoRotulo">a partir de</small> <span id="modalPreco"></span></p>
         <div class="modal__acoes">
-          <a class="btn btn--whats" id="modalWhats" href="#" target="_blank" rel="noopener"><svg><use href="#i-whats"/></svg> Quero este</a>
+          <a class="btn btn--whats" id="modalWhats" href="#" target="_blank" rel="noopener"><svg><use href="#i-whats"/></svg> <span id="modalWhatsTxt">Quero este</span></a>
           <button class="btn btn--contorno" id="modalSacola"><svg><use href="#i-bag"/></svg> Adicionar à sacola</button>
         </div>
-        <p class="modal__obs">Pagamento pelo site <b>em breve</b>. Por enquanto, tudo é combinado pelo WhatsApp.</p>
+        <p class="modal__obs" id="modalObs"></p>
       </div>
     </div>
   </dialog>

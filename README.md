@@ -9,6 +9,7 @@ Os pedidos são feitos pelo WhatsApp: cada pano tem um botão **"Quero este"** q
 ## O que tem no site
 
 - Catálogo com 17 panos, filtro por tema e foto ampliada de cada peça
+- Seção "Sob encomenda" com 9 modelos de panos com aplicação em crochê
 - Botão de WhatsApp em cada pano, com a mensagem pronta
 - Sacola que monta um único pedido para o WhatsApp
 - Seções "Como fazer seu pedido", "Cuidados com seu pano", "Dúvidas" e "Contato"
@@ -56,12 +57,14 @@ const PRECO_BASE = 25;
 | `cod`    | Código que aparece no card e na mensagem do WhatsApp |
 | `cat`    | Tema: `fofinhos`, `cozinha`, `natureza` ou `retro` |
 | `croche` | Cor do crochê, em texto |
-| `cor`    | Bolinhas de cor: `rosa`, `vermelho`, `amarelo`, `azul`, `marrom`, `cru`, `verde`, `verde-agua`, `vinho` |
+| `cor`    | Bolinhas de cor: `rosa`, `vermelho`, `amarelo`, `azul`, `marrom`, `cru`, `verde`, `verde-agua`, `vinho`, `pink`, `azul-claro`, `marinho`, `branco` |
 | `fotos`  | Uma ou mais fotos; a primeira é a capa |
 | `preco`  | Opcional. Ex.: `preco: 30` para um pano mais caro |
 | `pos`    | Opcional. Ajusta o enquadramento da capa. Ex.: `pos: "60% 50%"` |
 
 **Remover um pano** (vendido, por exemplo): apague o item correspondente em `PRODUTOS`.
+
+**Modelos sob encomenda** (panos com aplicação em crochê): ficam na lista `ENCOMENDAS`, logo abaixo de `PRODUTOS`, com os mesmos campos, menos `cat` e `preco`. Eles aparecem na seção "Sob encomenda", com valor "sob consulta" e botão "Encomendar", que já pede valor e prazo no WhatsApp. Use códigos começando com `E` (E10, E11…).
 
 ## Ver no computador
 
