@@ -33,7 +33,7 @@ As configurações ficam no começo do `script.js`.
 **Número do WhatsApp:** com o 55 do Brasil e o DDD, só números.
 
 ```js
-const WHATSAPP = "5518996741755";
+const WHATSAPP = "55DDDNUMERO"; // ex.: 55 + DDD + número
 ```
 
 **Preço padrão** (aparece como "a partir de"):
@@ -80,6 +80,6 @@ O site é publicado pelo GitHub Pages a partir da branch `main`. Toda alteraçã
 
 ```bash
 git add .
-git commit -m "Descrição da alteração|feat|fix"
+git commit -m "Descrição da alteração"
 git push
 ```
